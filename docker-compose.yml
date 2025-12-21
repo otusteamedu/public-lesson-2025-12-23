@@ -1,0 +1,18 @@
+services:
+    php-fpm:
+        build: docker
+        container_name: 'pl-php'
+        volumes:
+            - ./app:/app
+        working_dir: /app
+
+    nginx:
+        image: nginx
+        container_name: 'pl-nginx'
+        working_dir: /app
+        ports:
+            - '29998:80'
+        volumes:
+            - ./:/app
+            - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
+            - ./docker/nginx/logs:/var/log/nginx:delegated

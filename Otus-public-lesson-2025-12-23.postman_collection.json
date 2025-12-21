@@ -1,0 +1,135 @@
+{
+	"info": {
+		"_postman_id": "833ab422-03a0-427d-bced-c84d92d502a6",
+		"name": "Otus-public-lesson-2025-12-23",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9670063"
+	},
+	"item": [
+		{
+			"name": "UseCase",
+			"item": [
+				{
+					"name": "OK /api/orders/update",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"orderId\": 5,\r\n    \"status\": \"pending\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:19999/api/orders/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "19999",
+							"path": [
+								"api",
+								"orders",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BadRequest /api/orders/create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"clientId\": 1,\r\n    \"orderContent\": [\r\n        {\r\n            \"itemId\": 6,\r\n            \"qty\": 3\r\n        \r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:19999/api/orders/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "19999",
+							"path": [
+								"api",
+								"orders",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Validation Constraint /api/orders/create Copy",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"clientId\": 0,\r\n    \"orderContent\": [\r\n        {\r\n            \"itemId\": 6,\r\n            \"qty\": 3\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:19999/api/orders/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "19999",
+							"path": [
+								"api",
+								"orders",
+								"create"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "OK /api/orders/create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"clientId\": 1,\r\n    \"orderContent\": [\r\n        {\r\n            \"itemId\": 1000000,\r\n            \"qty\": 35555\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:19999/api/orders/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "19999",
+					"path": [
+						"api",
+						"orders",
+						"create"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
