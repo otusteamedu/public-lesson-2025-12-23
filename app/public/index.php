@@ -31,7 +31,7 @@ $kernel = new Kernel($projectDir, $config);
 
 $timeKernel = microtime(true);
 
-$kernel->handle();
+$kernel->handle(null);
 
 $timeHandled = microtime(true);
 
