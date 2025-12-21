@@ -1,0 +1,11 @@
+version: "3"
+
+server:
+  command: "php src/RR/psr-worker.php"
+
+http:
+  address: 0.0.0.0:29999
+
+logs:
+  level: debug
+  mode: development

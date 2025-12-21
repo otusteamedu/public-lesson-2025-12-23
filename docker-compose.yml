@@ -16,3 +16,13 @@ services:
             - ./:/app
             - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
             - ./docker/nginx/logs:/var/log/nginx:delegated
+
+    rr:
+        build: ./docker/rr
+        container_name: 'pl-rr'
+        volumes:
+            -  ./app:/app
+            -  ./docker/rr/.rr.yaml:/app/.rr.yaml
+        working_dir: /app
+        ports:
+            - '29999:29999'

@@ -2,3 +2,4 @@
 /.idea/
 /app/vendor/
 /app/var/
+/app/.rr.yaml
