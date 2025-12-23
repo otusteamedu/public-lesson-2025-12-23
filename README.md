@@ -7,7 +7,7 @@
 ### Сборка проекта и зависимостей
 
 1. Создаём и запускаем контейнеры командой `docker-compose up -d`
-2. Подключаемся к контейнеру `php`: `docker exec -it pl-php bash`
+2. Подключаемся к контейнеру `pl-php`: `docker exec -it pl-php bash`
 3. В контейнере устанавливаем зависимости: выполняем команду `composer install`
 
 ### Проверка работоспособности
@@ -135,3 +135,127 @@
    ```
 9. Выполняем запрос из Postman-коллекции `OK PDF (RR)`, видим, что файлы создаются. При некоторых условиях
    производительности хост-машины можно заметить даже здесь, что исполнение стало несколько быстрее
+
+## Добавляем стресс-тест
+
+1. Создаём директорию `app/tests`
+2. Подключаемся к контейнеру `pl-php`: `docker exec -it pl-php bash`
+3. Устанавливаем Pest: 
+   ```shell
+   composer require pestphp/pest pestphp/pest-plugin-stressless --dev --with-all-dependencies
+   ```
+4. Выполняем в контейнере команду:
+   ```shell
+   pestphp/pest-plugin-stressless
+   ```
+5. Исправляем контроллер `App\Root\Infrastructure\Http\Web\RootController`:
+   ```php
+   <?php
+   
+   namespace App\Root\Infrastructure\Http\Web;
+   
+   use CodersLairDev\ClFw\Http\Response\Trait\ResponseTrait;
+   use CodersLairDev\ClFw\Routing\Attribute\AsController;
+   use CodersLairDev\ClFw\Routing\Attribute\AsRoute;
+   use Monolog\Handler\StreamHandler;
+   use Monolog\Logger;
+   use Nyholm\Psr7\Factory\Psr17Factory;
+   use Psr\Http\Message\ResponseInterface;
+   use Psr\Log\LoggerInterface;
+   
+   #[AsController]
+   class RootController
+   {
+       use ResponseTrait;
+   
+       private LoggerInterface $logger;
+       private Psr17Factory $psr17Factory;
+   
+       public function __construct()
+       {
+           $this->psr17Factory = new Psr17Factory();
+   
+           $this->logger = new Logger('sha1_log');
+           $this->logger->pushHandler(new StreamHandler('/app/var/log/sha1_log.log'));
+       }
+   
+       #[AsRoute(path: '/')]
+       public function rootIndex(): ResponseInterface
+       {
+           $data = [
+               'success' => true,
+               'data' => __CLASS__ . '::' . __FUNCTION__ . '()',
+           ];
+   
+           return $this->createResponse(
+               psr17Factory: new Psr17Factory(),
+               content: json_encode($data),
+               status: 200
+           );
+       }
+   
+       #[AsRoute(path: '/getSha1Hash')]
+       public function getSha1Hash(): ResponseInterface
+       {
+           $requestId = uniqid();
+           $requestSha1Hash = sha1($requestId);
+   
+           $data = [
+               'requestId' => $requestId,
+               'requestSha1Hash' => $requestSha1Hash,
+           ];
+   
+           $this->logger->info('getSha1Hash', $data);
+   
+           return $this->createResponse(
+               psr17Factory: $this->psr17Factory,
+               content: json_encode($data),
+               status: 200
+           );
+       }
+   }
+   ```
+6. Перезапускаем контейнер с RR:
+   ```shell
+   docker container restart pl-rr
+   ```
+7. Из Postman-коллекции пробуем выполнить запросы `OK /getSha1Hash` и `OK (RR) /getSha1Hash`. Видим, что всё работает, ответы приходят.
+8. В контейнере `pl-php`:
+   ```shell
+   ./vendor/bin/pest stress http://pl-nginx/getSha1Hash --concurrency=100
+   ./vendor/bin/pest stress http://pl-rr:29999/getSha1Hash --concurrency=100
+   ```
+   Видим разницу во времени ответов
+9. Запускаем тест для RR с увеличенным `concurrency`:
+   ```shell
+   ./vendor/bin/pest stress http://pl-rr:29999/getSha1Hash --concurrency=500
+   ```
+   Видим, что процесс падает с нехваткой памяти
+10. Исправляем метод `getSha1Hash` в контроллере `App\Root\Infrastructure\Http\Web\RootController`:
+   ```php
+   #[AsRoute(path: '/getSha1Hash')]
+       public function getSha1Hash(): ResponseInterface
+       {
+           $requestId = uniqid();
+           $requestSha1Hash = sha1($requestId);
+
+           $this->logger->info('getSha1Hash', [
+              'requestId' => $requestId,
+              'requestSha1Hash' => $requestSha1Hash,
+           ]);
+   
+           return $this->createResponse(
+               psr17Factory: new Psr17Factory(),
+               content: json_encode([
+                   'requestId' => $requestId,
+                   'requestSha1Hash' => $requestSha1Hash,
+               ]),
+               status: 200
+           );
+       }
+```
+11. Перезапускаем контейнер RR:
+   ```shell
+   docker container restart pl-rr
+   ```
+12. Запускаем тест ещё раз
