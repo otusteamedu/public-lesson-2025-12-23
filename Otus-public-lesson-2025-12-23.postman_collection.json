@@ -7,108 +7,32 @@
 	},
 	"item": [
 		{
-			"name": "UseCase",
-			"item": [
-				{
-					"name": "OK /api/orders/update",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"orderId\": 5,\r\n    \"status\": \"pending\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:19999/api/orders/update",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "19999",
-							"path": [
-								"api",
-								"orders",
-								"update"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "BadRequest /api/orders/create",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"clientId\": 1,\r\n    \"orderContent\": [\r\n        {\r\n            \"itemId\": 6,\r\n            \"qty\": 3\r\n        \r\n    ]\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:19999/api/orders/create",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "19999",
-							"path": [
-								"api",
-								"orders",
-								"create"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Validation Constraint /api/orders/create Copy",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"clientId\": 0,\r\n    \"orderContent\": [\r\n        {\r\n            \"itemId\": 6,\r\n            \"qty\": 3\r\n        }\r\n    ]\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:19999/api/orders/create",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "19999",
-							"path": [
-								"api",
-								"orders",
-								"create"
-							]
-						}
-					},
-					"response": []
+			"name": "OK /getSha1Hash",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:29998/getSha1Hash",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "29998",
+					"path": [
+						"getSha1Hash"
+					]
 				}
-			]
+			},
+			"response": []
 		},
 		{
-			"name": "OK /api/orders/create",
+			"name": "OK (RR)",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"clientId\": 1,\r\n    \"orderContent\": [\r\n        {\r\n            \"itemId\": 1000000,\r\n            \"qty\": 35555\r\n        }\r\n    ]\r\n}",
+					"raw": "{\r\n    \"url\": \"https://roadrunner.dev/\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -116,15 +40,43 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:19999/api/orders/create",
+					"raw": "http://localhost:29999/",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "19999",
+					"port": "29999",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OK PDF (RR)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"url\": \"https://roadrunner.dev/\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:29999/api/pdf/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "29999",
 					"path": [
 						"api",
-						"orders",
+						"pdf",
 						"create"
 					]
 				}
